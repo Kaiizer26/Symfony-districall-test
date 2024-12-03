@@ -1,9 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tache index{% endblock %}
 
 {% block body %}
-    <h1>Tache index</h1>
+    <h1>Tache</h1>
+
+    <form method="get" action="{{ path('app_tache_index') }}">
+        <label for="status">Filtrer by statut :</label>
+        <select name="status" id="status" onchange="this.form.submit()">
+            <option value="">Tout</option>
+            <option value="fait" {{ currentStatus == 'fait' ? 'selected' : '' }}>Fait</option>
+            <option value="en_cours" {{ currentStatus == 'en_cours' ? 'selected' : '' }}>En cours</option>
+            <option value="pas_fait" {{ currentStatus == 'pas_fait' ? 'selected' : '' }}>Pas Fait</option>
+        </select>
+
+        <label for="search">Rechercher :</label>
+        <input type="text" id="search" name="search" value="{{ currentSearch }}" placeholder="Titre ou description">
+
+        <button type="submit">Appliquer</button>
+    </form>
 
     <table class="table">
         <thead>

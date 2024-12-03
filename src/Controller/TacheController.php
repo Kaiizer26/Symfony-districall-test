@@ -14,10 +14,38 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/tache')]
 final class TacheController extends AbstractController{
     #[Route(name: 'app_tache_index', methods: ['GET'])]
-    public function index(TacheRepository $tacheRepository): Response
+    public function index(Request $request, TacheRepository $tacheRepository): Response
     {
+        $status = strtolower($request->query->get('status', ''));
+        $search = $request->query->get('search', '');
+
+        $queryBuilder = $tacheRepository->createQueryBuilder('t');
+        $queryBuilder = $tacheRepository->createQueryBuilder('t');
+
+        if ($status) {
+            $queryBuilder->andWhere('t.status = :status') 
+                         ->setParameter('status', $status);
+        }
+        
+
+        if ($search) {
+            $queryBuilder->andWhere('t.title LIKE :search OR t.description LIKE :search') 
+                         ->setParameter('search', '%' . $search . '%');
+        }
+                $taches = $queryBuilder->getQuery()->getResult();
+        
+    
+        // $taches = $queryBuilder->getQuery()->getResult();
+
+        // $validStatuses = ['fait', 'en_cours', 'pas_fait']; 
+        // $taches = in_array($status, $validStatuses) 
+        // ? $tacheRepository->findBy(['status' => $status]) 
+        // : $tacheRepository->findAll();
+    
         return $this->render('tache/index.html.twig', [
-            'taches' => $tacheRepository->findAll(),
+            'taches' => $taches,
+            'currentStatus' => $status,
+            'currentSearch' => $search,
         ]);
     }
 
