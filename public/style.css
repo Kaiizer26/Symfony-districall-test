@@ -1,3 +1,6 @@
+body{
+    border: solid red;
+}
 .base-twig{
     background-image: url("images/lines-2.png");
 }
